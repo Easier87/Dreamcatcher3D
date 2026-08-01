@@ -3,6 +3,8 @@
 #include <models/rectangle.hpp>
 #include <core/shader.h>
 
+void processInput(GLFWwindow* window);
+
 using namespace Dreamcatcher;
 
 int main(void)
@@ -51,6 +53,8 @@ int main(void)
         glClearColor(0.1f, 0.1f, 0.1f, 0.1f);
         glClear(GL_COLOR_BUFFER_BIT);
 
+        processInput(window);
+
         triangleShader.use();
         // triangle.draw();
         rectangle.draw();
@@ -64,4 +68,10 @@ int main(void)
 
     glfwTerminate();
     return 0;
+}
+
+void processInput(GLFWwindow* window){
+    if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS){
+        glfwSetWindowShouldClose(window, true);
+    }
 }
