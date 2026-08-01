@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 4.1.2 FATAL_ERROR)
 project(Dreamcatcher3D VERSION 0.0.1)
 
-project(a.out)
+project(a)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -15,6 +15,8 @@ set(ASSIMP_BUILD_MINIZIP ON CACHE BOOL "" FORCE)
 
 add_executable(${PROJECT_NAME}
   src/main.cpp
+  src/models/triangle.cpp
+  src/models/rectangle.cpp
 )
 
 add_subdirectory(thirdparty/glfw-3.4)

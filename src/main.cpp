@@ -1,4 +1,6 @@
 #include <header_files/main.hpp>
+#include <models/triangle.hpp>
+#include <models/rectangle.hpp>
 #include <core/shader.h>
 
 using namespace Dreamcatcher;
@@ -37,26 +39,10 @@ int main(void)
     }
 
     cout << "OpenGL version: " << glGetString(GL_VERSION) << endl;
-
-    float vertices[] = {     // vertex positions    // colors
-                             0.5f, -0.5f, 0.0f,     1.0f, 0.0f, 0.0f,
-                            -0.5f, -0.5f, 0.0f,     0.0f, 1.0f, 0.0f,
-                             0.0f,  0.5f, 0.0f,     0.0f, 0.0f, 1.0f
-    };
-
-    Shader triangleShader("../shaders/triangleVertexShader.glsl", "../shaders/triangleFragmentShader.glsl"); 
-
-    unsigned int VAO, VBO;
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    glBindVertexArray(VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    glBindVertexArray(0);
+    
+    Triangle triangle;
+    Rectangle rectangle;
+    Shader triangleShader("../shaders/triangleVertexShader.glsl", "../shaders/triangleFragmentShader.glsl");
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
@@ -66,8 +52,8 @@ int main(void)
         glClear(GL_COLOR_BUFFER_BIT);
 
         triangleShader.use();
-        glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        // triangle.draw();
+        rectangle.draw();
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);

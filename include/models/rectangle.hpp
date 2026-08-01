@@ -1,17 +1,16 @@
 #pragma once
 
-// #include <iostream>
 #include <models/base_includer.hpp>
 
 namespace Dreamcatcher{
 
-class Triangle{
+class Rectangle{
 public:
-  Triangle();
+  Rectangle();
   void draw();
 private:
   unsigned int VAO, VBO;
-  std::array<float, 18> vertices;
+  std::array<float, 36> rectangleVertices; 
 };
 
 }
