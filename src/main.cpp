@@ -76,7 +76,21 @@ int main(void)
         processInput(window);
 
         defaultShader.use();
+        // glm::mat4 transform = glm::mat4(1.0f);
+        // transform = glm::rotate(transform, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
 
+        // defaultShader.setMat4("transform", transform);
+        
+        glm::mat4 model = glm::mat4(1.0f);
+        glm::mat4 view = glm::mat4(1.0f);
+        glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)WIN_WIDTH / (float)WIN_HEIGHT, 0.1f, 100.0f);
+
+        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -2.0f));
+
+        defaultShader.setMat4("model", model);
+        defaultShader.setMat4("view", view);
+        defaultShader.setMat4("projection", projection);
+        
         glBindTexture(GL_TEXTURE_2D, texture);
 
         // triangle.draw();

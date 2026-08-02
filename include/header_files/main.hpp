@@ -8,6 +8,10 @@
 #include <core/shader.hpp>
 #include <stb-master/stb_image.h>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 const int WIN_WIDTH = 800;
 const int WIN_HEIGHT = 600;
 

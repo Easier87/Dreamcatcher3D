@@ -8,6 +8,8 @@
 #include <sstream>
 #include <iostream>
 
+namespace Dreamcatcher{
+
 class Shader
 {
 public:
@@ -161,3 +163,5 @@ private:
         }
     }
 };
+
+}

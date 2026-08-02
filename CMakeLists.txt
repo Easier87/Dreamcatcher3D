@@ -15,9 +15,13 @@ set(ASSIMP_BUILD_MINIZIP ON CACHE BOOL "" FORCE)
 
 add_executable(${PROJECT_NAME}
   src/main.cpp
-  src/models/triangle.cpp
-  src/models/rectangle.cpp
   src/stb_image.cpp
+
+  src/core/camera.cpp
+  src/core/texture_loader.cpp
+
+  src/models/triangle.cpp
+  src/models/rectangle.cpp 
 )
 
 add_subdirectory(thirdparty/glfw-3.4)
