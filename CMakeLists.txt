@@ -17,6 +17,7 @@ add_executable(${PROJECT_NAME}
   src/main.cpp
   src/models/triangle.cpp
   src/models/rectangle.cpp
+  src/stb_image.cpp
 )
 
 add_subdirectory(thirdparty/glfw-3.4)

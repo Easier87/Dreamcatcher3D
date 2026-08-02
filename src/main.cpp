@@ -1,7 +1,4 @@
 #include <header_files/main.hpp>
-#include <models/triangle.hpp>
-#include <models/rectangle.hpp>
-#include <core/shader.h>
 
 void processInput(GLFWwindow* window);
 
@@ -23,10 +20,10 @@ int main(void)
         return -1;
 
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(640, 480, "Dreamcatcher3D", NULL, NULL);
+    window = glfwCreateWindow(WIN_WIDTH, WIN_HEIGHT, "Dreamcatcher3D", NULL, NULL);
     if (!window)
     {
-        cout << "Failed to load GLFW Window!" << endl;
+        std::cout << "Failed to load GLFW Window!" << std::endl;
         glfwTerminate();
         return -1;
     }
@@ -35,16 +32,39 @@ int main(void)
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)){
-        cout << "Failed to initialize GLAD!" << endl;
+        std::cout << "Failed to initialize GLAD!" << std::endl;
         glfwTerminate();
         return -1;
     }
 
-    cout << "OpenGL version: " << glGetString(GL_VERSION) << endl;
+    // TEXTURE LOADING
+    stbi_set_flip_vertically_on_load(true);
+
+    unsigned int texture;
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    int width, height, nrChannels;
+    unsigned char *data = stbi_load("../assets/png_image.png", &width, &height, &nrChannels, 0);
+    
+    if(data){
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+    }
+    else{
+        std::cout << "Failed to load texture!" << std::endl;
+    }
+    stbi_image_free(data);
+
+    std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
     
     Triangle triangle;
     Rectangle rectangle;
-    Shader triangleShader("../shaders/triangleVertexShader.glsl", "../shaders/triangleFragmentShader.glsl");
+    Shader defaultShader("../shaders/defaultVertexShader.glsl", "../shaders/defaultFragmentShader.glsl");
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
@@ -55,7 +75,10 @@ int main(void)
 
         processInput(window);
 
-        triangleShader.use();
+        defaultShader.use();
+
+        glBindTexture(GL_TEXTURE_2D, texture);
+
         // triangle.draw();
         rectangle.draw();
 

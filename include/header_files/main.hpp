@@ -3,6 +3,10 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include <models/triangle.hpp>
+#include <models/rectangle.hpp>
+#include <core/shader.hpp>
+#include <stb-master/stb_image.h>
 
 const int WIN_WIDTH = 800;
 const int WIN_HEIGHT = 600;
@@ -13,5 +17,3 @@ namespace Dreamcatcher{
   }
 
 }
-
-using namespace std;

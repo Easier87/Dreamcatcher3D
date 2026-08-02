@@ -9,8 +9,8 @@ public:
   Rectangle();
   void draw();
 private:
-  unsigned int VAO, VBO;
-  std::array<float, 36> rectangleVertices; 
+  unsigned int VAO, VBO, EBO;
+  std::array<float, 32> rectangleVertices; 
 };
 
 }
