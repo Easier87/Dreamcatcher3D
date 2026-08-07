@@ -6,6 +6,8 @@
 #include <models/triangle.hpp>
 #include <models/rectangle.hpp>
 #include <core/shader.hpp>
+#include <core/camera.hpp>
+
 #include <stb-master/stb_image.h>
 
 #include <glm/glm.hpp>
