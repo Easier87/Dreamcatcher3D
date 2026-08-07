@@ -15,9 +15,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-namespace Dreamcatcher{
-  inline void framebuffer_size_callback(GLFWwindow *window, int width, int height){
-    glViewport(0, 0, WIN_WIDTH, WIN_HEIGHT);
-  }
-
-}
+// namespace Dreamcatcher{
+//   inline void framebuffer_size_callback(GLFWwindow *window, int width, int height){
+//     glViewport(0, 0, WIN_WIDTH, WIN_HEIGHT);
+//   }
+//
+// }

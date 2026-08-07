@@ -9,48 +9,18 @@ bool firstMouse = true;
 
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
-float frameCount = 0.0f;
-float fpsTimer;
+int frameCount = 0;
+float fpsTimer = 0;
 
 void processInput(GLFWwindow* window);
 void mouse_callback(GLFWwindow *window, double xpos, double ypos);
 void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
 
 int main(void)
-{   
-    glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-#ifdef __APPLE__
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-#endif
-    GLFWwindow* window;
-
-    /* Initialize the library */
-    if (!glfwInit())
-        return -1;
-
-    /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(WIN_WIDTH, WIN_HEIGHT, "Dreamcatcher3D", NULL, NULL);
-    if (!window)
-    {
-        std::cout << "Failed to load GLFW Window!" << std::endl;
-        glfwTerminate();
-        return -1;
-    }
-
-    glfwMakeContextCurrent(window);
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    glfwSetCursorPosCallback(window, mouse_callback);
-    glfwSetScrollCallback(window, scroll_callback);
-
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)){
-        std::cout << "Failed to initialize GLAD!" << std::endl;
-        glfwTerminate();
-        return -1;
-    }
+{
+    Window defaultWindow;
+    glfwSetCursorPosCallback(defaultWindow.GetHandle(), mouse_callback);
+    glfwSetScrollCallback(defaultWindow.GetHandle(), scroll_callback);
 
     // glEnable(GL_DEPTH_TEST);
     // glDepthFunc(GL_LESS);
@@ -86,16 +56,25 @@ int main(void)
     Shader defaultShader("../shaders/defaultVertexShader.glsl", "../shaders/defaultFragmentShader.glsl");
 
     /* Loop until the user closes the window */
-    while (!glfwWindowShouldClose(window))
+    while (!defaultWindow.ShouldClose())
     {
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
         frameCount++;
+        fpsTimer += deltaTime;
+
+        if (fpsTimer >= 1.0f){
+            std::string title = "Dreamcatcher3D | fps: " + std::to_string(frameCount);
+            glfwSetWindowTitle(defaultWindow.GetHandle(), title.c_str());
+            frameCount = 0;
+            fpsTimer = 0;
+        }
         
      
-        processInput(window);
+        processInput(defaultWindow.GetHandle());
+
         /* Render here */
         glClearColor(0.1f, 0.1f, 0.1f, 0.1f);
         glClear(GL_COLOR_BUFFER_BIT);
@@ -123,13 +102,12 @@ int main(void)
         rectangle.draw();
 
         /* Swap front and back buffers */
-        glfwSwapBuffers(window);
+        defaultWindow.SwapBuffers();
 
         /* Poll for and process events */
-        glfwPollEvents();
+        defaultWindow.PollEvents();
     }
 
-    glfwTerminate();
     return 0;
 }
 

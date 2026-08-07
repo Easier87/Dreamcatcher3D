@@ -18,6 +18,7 @@ add_executable(${PROJECT_NAME}
   src/stb_image.cpp
 
   src/core/camera.cpp
+  src/core/window.cpp
   src/core/texture_loader.cpp
 
   src/models/triangle.cpp

@@ -21,7 +21,7 @@ public:
   Window(const Window&) = delete;
   Window& operator = (const Window&) = delete;
 
-  GLFWwindow* GetHandle() const { return window;   };
+  GLFWwindow* GetHandle() const { return m_window;   };
   int         GetWidth()  const { return m_width;  };
   int         GetHeight() const { return m_height; };
 
@@ -30,7 +30,7 @@ public:
   void PollEvents() const;
 
 private:
-  GLFWwindow* window = nullptr;
+  GLFWwindow* m_window = nullptr;
   int m_width, m_height;
   bool WindowInit(std::string title);
   static void framebuffer_size_callback(GLFWwindow *window, int width, int height);

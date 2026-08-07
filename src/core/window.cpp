@@ -9,8 +9,8 @@ Window::Window(int width, int height, const std::string title) : m_width(width),
 }
 
 Window::~Window(){
-  if (!window)
-    glfwDestroyWindow(window);
+  if (m_window)
+    glfwDestroyWindow(m_window);
   glfwTerminate();
 }
 
@@ -22,23 +22,25 @@ bool Window::WindowInit(std::string title){
 #ifdef __APPLE__
   glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
-  GLFWwindow* window;
-
-  if (!glfwInit())
+  if (!glfwInit()){
+    std::cout << "glfwInit failed!" << std::endl;
     return false;
 
-  window = glfwCreateWindow(WIN_WIDTH, WIN_HEIGHT, "Dreamcatcher3D", NULL, NULL);
-  if (!window)
+  }
+
+  m_window = glfwCreateWindow(WIN_WIDTH, WIN_HEIGHT, "Dreamcatcher3D", NULL, NULL);
+  if (!m_window)
   {
     std::cout << "Failed to load GLFW window!" << std::endl;
     glfwTerminate();
     return false;
   }
 
-  glfwMakeContextCurrent(window);
-  glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-  // glfwSetCursorPosCallback(window, mouse_callback);
+  glfwMakeContextCurrent(m_window);
+  glfwSetWindowUserPointer(m_window, this);
+  glfwSetFramebufferSizeCallback(m_window, framebuffer_size_callback);
+  glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+  // glfwSetCursorPosCallback(m_window, mouse_callback);
   // glfwSetScrollCallback(window, scroll_callback);
   
   if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)){
@@ -59,11 +61,11 @@ void Window::framebuffer_size_callback(GLFWwindow *window, int width, int height
 }
 
 bool Window::ShouldClose() const{
-  return glfwWindowShouldClose(window);
+  return glfwWindowShouldClose(m_window);
 }
 
 void Window::SwapBuffers() const{
-  return glfwSwapBuffers(window);
+  return glfwSwapBuffers(m_window);
 }
 
 void Window::PollEvents() const{
