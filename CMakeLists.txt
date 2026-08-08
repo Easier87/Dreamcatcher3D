@@ -22,7 +22,8 @@ add_executable(${PROJECT_NAME}
   src/core/texture_loader.cpp
 
   src/models/triangle.cpp
-  src/models/rectangle.cpp 
+  src/models/rectangle.cpp
+  src/models/cube.cpp
 )
 
 add_subdirectory(thirdparty/glfw-3.4)

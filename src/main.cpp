@@ -22,7 +22,7 @@ int main(void)
     glfwSetCursorPosCallback(defaultWindow.GetHandle(), mouse_callback);
     glfwSetScrollCallback(defaultWindow.GetHandle(), scroll_callback);
 
-    // glEnable(GL_DEPTH_TEST);
+    glEnable(GL_DEPTH_TEST);
     // glDepthFunc(GL_LESS);
     glEnable(GL_BLEND);
 
@@ -38,10 +38,10 @@ int main(void)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     int width, height, nrChannels;
-    unsigned char *data = stbi_load("../assets/png_image.png", &width, &height, &nrChannels, 0);
+    unsigned char *data = stbi_load("../assets/broken_brick_wall_1k/textures/broken_brick_wall_diff_1k.jpg", &width, &height, &nrChannels, 0);
     
     if(data){
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
     }
     else{
@@ -53,7 +53,10 @@ int main(void)
     
     Triangle triangle;
     Rectangle rectangle;
+    Cube cube;
+
     Shader defaultShader("../shaders/defaultVertexShader.glsl", "../shaders/defaultFragmentShader.glsl");
+    Shader lightShader("../shaders/lightVertexShader.glsl", "../shaders/lightFragmentShader.glsl");
 
     /* Loop until the user closes the window */
     while (!defaultWindow.ShouldClose())
@@ -77,9 +80,9 @@ int main(void)
 
         /* Render here */
         glClearColor(0.1f, 0.1f, 0.1f, 0.1f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        defaultShader.use();
+        // defaultShader.use();
         // glm::mat4 transform = glm::mat4(1.0f);
         // transform = glm::rotate(transform, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
 
@@ -90,16 +93,30 @@ int main(void)
         glm::mat4 projection = glm::perspective(glm::radians(defaultCamera.Zoom),
                 (float)WIN_WIDTH / (float)WIN_HEIGHT, 0.1f, 100.0f);
 
-        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -2.0f));
+        // view = glm::translate(view, glm::vec3(0.0f, 0.0f, -2.0f));
 
-        defaultShader.setMat4("model", model);
-        defaultShader.setMat4("view", view);
-        defaultShader.setMat4("projection", projection);
+        lightShader.use();
+        lightShader.setVec3("viewPos", defaultCamera.Position);
+        lightShader.setFloat("shininess", 32.0f);
+
+        lightShader.setVec3("directLight.direction", 1.0f, -0.7f, 1.0f);
+        lightShader.setVec3("directLight.ambient", 0.2f, 0.2f, 0.2f);
+        lightShader.setVec3("directLight.diffuse", 0.8f, 0.8f, 0.8f);
+        lightShader.setVec3("directLight.specular", 1.0f, 1.0f, 1.0f);
+
+        lightShader.setMat4("projection", projection);
+        lightShader.setMat4("view", view);
+        lightShader.setMat4("model", model);
+
+        // defaultShader.setMat4("model", model);
+        // defaultShader.setMat4("view", view);
+        // defaultShader.setMat4("projection", projection);
         
         glBindTexture(GL_TEXTURE_2D, texture);
 
         // triangle.draw();
-        rectangle.draw();
+        // rectangle.draw();
+        cube.draw();
 
         /* Swap front and back buffers */
         defaultWindow.SwapBuffers();

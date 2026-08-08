@@ -3,8 +3,11 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
+
 #include <models/triangle.hpp>
 #include <models/rectangle.hpp>
+#include <models/cube.hpp>
+
 #include <core/shader.hpp>
 #include <core/camera.hpp>
 #include <core/window.hpp>
