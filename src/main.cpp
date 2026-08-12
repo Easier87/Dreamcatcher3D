@@ -23,8 +23,13 @@ int main(void)
     glfwSetScrollCallback(defaultWindow.GetHandle(), scroll_callback);
 
     glEnable(GL_DEPTH_TEST);
-    // glDepthFunc(GL_LESS);
+    glDepthFunc(GL_LESS);
     glEnable(GL_BLEND);
+
+    glEnable(GL_STENCIL_TEST);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+    // glStencilFunc(GL_ALWAYS, 1, 0xFF);
+    // glStencilMask(0xFF);
 
     // TEXTURE LOADING
     stbi_set_flip_vertically_on_load(true);
@@ -74,15 +79,16 @@ int main(void)
     std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
     
     Triangle triangle;
-    Rectangle rectangle;
+    Plane plane;
     Cube cube;
 
     Shader defaultShader("../shaders/defaultVertexShader.glsl", "../shaders/defaultFragmentShader.glsl");
     Shader screenShader("../shaders/framebufferVertex.glsl", "../shaders/framebufferFragment.glsl");
+    Shader shaderSingleColor("../shaders/defaultVertexShader.glsl", "../shaders/shaderSingleColor.glsl");
 
     Framebuffer defaultFramebuffer;
 
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     /* Loop until the user closes the window */
     while (!defaultWindow.ShouldClose())
@@ -107,9 +113,13 @@ int main(void)
         /* Render here */
         glBindFramebuffer(GL_FRAMEBUFFER, defaultFramebuffer.GetBuffer());
         glEnable(GL_DEPTH_TEST);
+        glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
         glClearColor(0.1f, 0.1f, 0.1f, 0.1f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+        glStencilMask(0x00);
+
 
         // defaultShader.use();
         // glm::mat4 transform = glm::mat4(1.0f);
@@ -123,6 +133,8 @@ int main(void)
                 (float)WIN_WIDTH / (float)WIN_HEIGHT, 0.1f, 100.0f);
 
         // view = glm::translate(view, glm::vec3(0.0f, 0.0f, -2.0f));
+        model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
+
 
         defaultShader.use();
         defaultShader.setVec3("viewPos", defaultCamera.Position);
@@ -166,11 +178,35 @@ int main(void)
         defaultShader.setMat4("view", view);
         defaultShader.setMat4("model", model);
 
-        glBindTexture(GL_TEXTURE_2D, texture);
 
-        // triangle.draw();
-        // rectangle.draw();
+        glBindTexture(GL_TEXTURE_2D, texture);
+        plane.draw();
+
+
+        model = glm::scale(model, glm::vec3(1.01f, 1.01f, 1.01f));
+        model = glm::translate(model, glm::vec3(0.0f, 2.0f, 0.0f));
+
+
+        // plane.draw();
+
+        glStencilFunc(GL_ALWAYS, 1, 0xFF);
+        glStencilMask(0xFF);
         cube.draw();
+
+        glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+        glStencilMask(0x00);
+        glDisable(GL_DEPTH_TEST);
+        shaderSingleColor.use();
+
+        shaderSingleColor.setVec3("viewPos", defaultCamera.Position);
+        shaderSingleColor.setMat4("projection", projection);
+        shaderSingleColor.setMat4("view", view);
+        shaderSingleColor.setMat4("model", model);
+        
+        cube.draw();
+        glStencilMask(0xFF);
+        glStencilFunc(GL_ALWAYS, 1, 0xFF);
+        glEnable(GL_DEPTH_TEST);
 
 
 
@@ -183,6 +219,7 @@ int main(void)
         glBindVertexArray(quadVAO);
         glBindTexture(GL_TEXTURE_2D, defaultFramebuffer.GetTexture());
         glDrawArrays(GL_TRIANGLES, 0, 6);
+        // rectangle.draw();
 
         /* Swap front and back buffers */
         defaultWindow.SwapBuffers();

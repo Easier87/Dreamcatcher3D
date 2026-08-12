@@ -4,9 +4,9 @@
 
 namespace Dreamcatcher{
 
-class Rectangle{
+class Plane{
 public:
-  Rectangle();
+  Plane();
   void draw();
 private:
   unsigned int VAO, VBO, EBO;

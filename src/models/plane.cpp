@@ -1,13 +1,13 @@
-#include <models/rectangle.hpp>
+#include <models/plane.hpp>
 #include <vector>
 
 using namespace Dreamcatcher;
 
-Rectangle::Rectangle() : rectangleVertices{
-                                            1.0f, 1.0f, 0.0f,   1.0f, 0.0f, 0.0f,   0.0f, 0.0f,
-                                            1.0f, 1.0f, 0.0f,   0.0f, 1.0f, 0.0f,   0.0f, 1.0f,
-                                            1.0f, 1.0f, 0.0f,   0.0f, 0.0f, 1.0f,   1.0f, 1.0f,
-                                            1.0f, 1.0f, 0.0f,   1.0f, 0.0f, 1.0f,   1.0f, 0.0f
+Plane::Plane() : rectangleVertices{
+                                            -1.0f, 0.0f,  1.0f,   0.0f, 1.0f, 0.0f,   0.0f, 0.0f,
+                                            -1.0f, 0.0f, -1.0f,   0.0f, 1.0f, 0.0f,   0.0f, 1.0f,
+                                             1.0f, 0.0f, -1.0f,   0.0f, 1.0f, 0.0f,   1.0f, 1.0f,
+                                             1.0f, 0.0f,  1.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f
 } 
 
 {
@@ -35,7 +35,7 @@ Rectangle::Rectangle() : rectangleVertices{
   glBindVertexArray(0);
 }
 
-void Rectangle::draw(){
+void Plane::draw(){
   glBindVertexArray(VAO);
   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
   glBindVertexArray(0);

@@ -5,7 +5,7 @@
 #include <iostream>
 
 #include <models/triangle.hpp>
-#include <models/rectangle.hpp>
+#include <models/plane.hpp>
 #include <models/cube.hpp>
 
 #include <core/shader.hpp>

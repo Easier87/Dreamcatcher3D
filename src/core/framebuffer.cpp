@@ -2,7 +2,15 @@
 
 using namespace Dreamcatcher;
 
-Framebuffer::Framebuffer() {
+Framebuffer::Framebuffer() : quad{ 
+                                            -1.0f, -1.0f,   0.0f, 0.0f,
+                                            -1.0f,  1.0f,   0.0f, 1.0f,
+                                             1.0f,  1.0f,   1.0f, 1.0f,
+                                             1.0f, -1.0f,   1.0f, 0.0f
+}
+
+
+{
   glGenFramebuffers(1, &FBO);
   glBindFramebuffer(GL_FRAMEBUFFER, FBO);
 
@@ -32,7 +40,35 @@ Framebuffer::Framebuffer() {
   if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
     std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std:: endl;
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+  
+   
+  // GLuint indices[] ={
+  //   0, 1, 2,
+  //   2, 3, 0
+  // };
+  //
+  // glGenBuffers(1, &EBO);
+  // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+  // glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+  //
+  // glGenVertexArrays(1, &quadVAO);
+  // glGenBuffers(1, &quadVBO);
+  // glBindVertexArray(quadVAO);
+  // glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+  // glBufferData(GL_ARRAY_BUFFER, sizeof(quad), &quad, GL_STATIC_DRAW);
+  // glEnableVertexAttribArray(0);
+  // glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+  // glEnableVertexAttribArray(1);
+  // glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+  // glBindVertexArray(0);
 }
+
+// void Framebuffer::DrawFramebuffer(){
+//   glBindVertexArray(quadVAO);
+//   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+//   glBindVertexArray(0);
+// }
 
 // GLuint Framebuffer::GetBuffer(){
 //   return FBO;

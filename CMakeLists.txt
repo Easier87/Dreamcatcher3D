@@ -23,7 +23,7 @@ add_executable(${PROJECT_NAME}
   src/core/framebuffer.cpp
 
   src/models/triangle.cpp
-  src/models/rectangle.cpp
+  src/models/plane.cpp
   src/models/cube.cpp
 )
 
