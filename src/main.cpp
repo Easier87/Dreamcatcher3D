@@ -36,6 +36,28 @@ int main(void)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    
+    float quadVertices[] = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
+        // positions   // texCoords
+        -1.0f,  1.0f,  0.0f, 1.0f,
+        -1.0f, -1.0f,  0.0f, 0.0f,
+         1.0f, -1.0f,  1.0f, 0.0f,
+
+        -1.0f,  1.0f,  0.0f, 1.0f,
+         1.0f, -1.0f,  1.0f, 0.0f,
+         1.0f,  1.0f,  1.0f, 1.0f
+    };
+
+    unsigned int quadVAO, quadVBO;
+    glGenVertexArrays(1, &quadVAO);
+    glGenBuffers(1, &quadVBO);
+    glBindVertexArray(quadVAO);
+    glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 
     int width, height, nrChannels;
     unsigned char *data = stbi_load("../assets/broken_brick_wall_1k/textures/broken_brick_wall_diff_1k.jpg", &width, &height, &nrChannels, 0);
@@ -56,6 +78,11 @@ int main(void)
     Cube cube;
 
     Shader defaultShader("../shaders/defaultVertexShader.glsl", "../shaders/defaultFragmentShader.glsl");
+    Shader screenShader("../shaders/framebufferVertex.glsl", "../shaders/framebufferFragment.glsl");
+
+    Framebuffer defaultFramebuffer;
+
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     /* Loop until the user closes the window */
     while (!defaultWindow.ShouldClose())
@@ -78,6 +105,9 @@ int main(void)
         processInput(defaultWindow.GetHandle());
 
         /* Render here */
+        glBindFramebuffer(GL_FRAMEBUFFER, defaultFramebuffer.GetBuffer());
+        glEnable(GL_DEPTH_TEST);
+
         glClearColor(0.1f, 0.1f, 0.1f, 0.1f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -86,7 +116,7 @@ int main(void)
         // transform = glm::rotate(transform, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
 
         // defaultShader.setMat4("transform", transform);
-        
+
         glm::mat4 model = glm::mat4(1.0f);
         glm::mat4 view = defaultCamera.GetViewMatrix();
         glm::mat4 projection = glm::perspective(glm::radians(defaultCamera.Zoom),
@@ -116,7 +146,7 @@ int main(void)
         defaultShader.setVec3 ("pointLight.ambient", 0.2f, 0.2f, 0.2f);
         defaultShader.setVec3 ("pointLight.diffuse", 0.8f, 0.8f, 0.8f);
         defaultShader.setVec3 ("pointLight.specular", 1.0f, 1.0f, 1.0f);
-        
+
 
         // spotlight
         defaultShader.setVec3 ("spotLight.position", defaultCamera.Position);
@@ -135,12 +165,24 @@ int main(void)
         defaultShader.setMat4("projection", projection);
         defaultShader.setMat4("view", view);
         defaultShader.setMat4("model", model);
-        
+
         glBindTexture(GL_TEXTURE_2D, texture);
 
         // triangle.draw();
         // rectangle.draw();
         cube.draw();
+
+
+
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glDisable(GL_DEPTH_TEST);
+        glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        screenShader.use();
+        glBindVertexArray(quadVAO);
+        glBindTexture(GL_TEXTURE_2D, defaultFramebuffer.GetTexture());
+        glDrawArrays(GL_TRIANGLES, 0, 6);
 
         /* Swap front and back buffers */
         defaultWindow.SwapBuffers();
