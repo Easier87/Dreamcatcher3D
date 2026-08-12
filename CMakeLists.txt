@@ -20,6 +20,7 @@ add_executable(${PROJECT_NAME}
   src/core/camera.cpp
   src/core/window.cpp
   src/core/texture_loader.cpp
+  src/core/framebuffer.cpp
 
   src/models/triangle.cpp
   src/models/rectangle.cpp

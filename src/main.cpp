@@ -56,7 +56,6 @@ int main(void)
     Cube cube;
 
     Shader defaultShader("../shaders/defaultVertexShader.glsl", "../shaders/defaultFragmentShader.glsl");
-    Shader lightShader("../shaders/lightVertexShader.glsl", "../shaders/lightFragmentShader.glsl");
 
     /* Loop until the user closes the window */
     while (!defaultWindow.ShouldClose())
@@ -95,22 +94,47 @@ int main(void)
 
         // view = glm::translate(view, glm::vec3(0.0f, 0.0f, -2.0f));
 
-        lightShader.use();
-        lightShader.setVec3("viewPos", defaultCamera.Position);
-        lightShader.setFloat("shininess", 32.0f);
+        defaultShader.use();
+        defaultShader.setVec3("viewPos", defaultCamera.Position);
+        defaultShader.setFloat("shininess", 32.0f);
 
-        lightShader.setVec3("directLight.direction", 1.0f, -0.7f, 1.0f);
-        lightShader.setVec3("directLight.ambient", 0.2f, 0.2f, 0.2f);
-        lightShader.setVec3("directLight.diffuse", 0.8f, 0.8f, 0.8f);
-        lightShader.setVec3("directLight.specular", 1.0f, 1.0f, 1.0f);
 
-        lightShader.setMat4("projection", projection);
-        lightShader.setMat4("view", view);
-        lightShader.setMat4("model", model);
+        // direct light
+        defaultShader.setVec3("directLight.direction", -1.0f, -0.7f, -1.0f);
+        defaultShader.setVec3("directLight.ambient", 0.2f, 0.2f, 0.2f);
+        defaultShader.setVec3("directLight.diffuse", 0.8f, 0.8f, 0.8f);
+        defaultShader.setVec3("directLight.specular", 1.0f, 1.0f, 1.0f);
 
-        // defaultShader.setMat4("model", model);
-        // defaultShader.setMat4("view", view);
-        // defaultShader.setMat4("projection", projection);
+
+
+        // point light
+        defaultShader.setVec3 ("pointLight.position", -3.0f, 4.0f, -1.0f);
+        defaultShader.setFloat("pointLight.constant", 1.0f);
+        defaultShader.setFloat("pointLight.linear", 0.09f);
+        defaultShader.setFloat("pointLight.quadratic", 0.045f);
+
+        defaultShader.setVec3 ("pointLight.ambient", 0.2f, 0.2f, 0.2f);
+        defaultShader.setVec3 ("pointLight.diffuse", 0.8f, 0.8f, 0.8f);
+        defaultShader.setVec3 ("pointLight.specular", 1.0f, 1.0f, 1.0f);
+        
+
+        // spotlight
+        defaultShader.setVec3 ("spotLight.position", defaultCamera.Position);
+        defaultShader.setVec3 ("spotLight.direction", defaultCamera.Front);
+        defaultShader.setFloat("spotLight.cutOff", glm::cos(glm::radians(12.5f)));
+        defaultShader.setFloat("spotLight.outerCutOff", glm::cos(glm::radians(18.5f)));
+
+        defaultShader.setFloat("spotLight.constant", 1.0f);
+        defaultShader.setFloat("spotLight.linear", 0.09f);
+        defaultShader.setFloat("spotLight.quadratic", 0.045f);
+
+        defaultShader.setVec3 ("spotLight.ambient", 0.1f, 0.1f, 0.1f);
+        defaultShader.setVec3 ("spotLight.diffuse", 0.8f, 0.8f, 0.8f);
+        defaultShader.setVec3 ("spotLight.specular", 1.0f, 1.0f, 1.0f);
+
+        defaultShader.setMat4("projection", projection);
+        defaultShader.setMat4("view", view);
+        defaultShader.setMat4("model", model);
         
         glBindTexture(GL_TEXTURE_2D, texture);
 
