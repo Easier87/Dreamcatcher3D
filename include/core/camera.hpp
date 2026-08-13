@@ -10,7 +10,9 @@ enum Camera_Movement{
   FORWARD,
   BACKWARD,
   RIGHT,
-  LEFT
+  LEFT,
+  UP,
+  DOWN
 };
 
 const float YAW = -90.0f;

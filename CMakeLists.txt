@@ -16,6 +16,7 @@ set(ASSIMP_BUILD_MINIZIP ON CACHE BOOL "" FORCE)
 add_executable(${PROJECT_NAME}
   src/main.cpp
   src/stb_image.cpp
+  src/skybox.cpp
 
   src/core/camera.cpp
   src/core/window.cpp

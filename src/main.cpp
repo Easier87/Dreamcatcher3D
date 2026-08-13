@@ -23,11 +23,17 @@ int main(void)
     glfwSetScrollCallback(defaultWindow.GetHandle(), scroll_callback);
 
     glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LESS);
+    glDepthFunc(GL_LEQUAL);
     glEnable(GL_BLEND);
 
     glEnable(GL_STENCIL_TEST);
     glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+
+
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_FRONT);
+    glFrontFace(GL_CCW);
+
     // glStencilFunc(GL_ALWAYS, 1, 0xFF);
     // glStencilMask(0xFF);
 
@@ -44,13 +50,13 @@ int main(void)
     
     float quadVertices[] = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
         // positions   // texCoords
-        -1.0f,  1.0f,  0.0f, 1.0f,
-        -1.0f, -1.0f,  0.0f, 0.0f,
-         1.0f, -1.0f,  1.0f, 0.0f,
+        -1.0f,  -1.0f,  0.0f, 0.0f,
+        -1.0f,   1.0f,  0.0f, 1.0f,
+         1.0f,   1.0f,  1.0f, 1.0f,
 
-        -1.0f,  1.0f,  0.0f, 1.0f,
-         1.0f, -1.0f,  1.0f, 0.0f,
-         1.0f,  1.0f,  1.0f, 1.0f
+         1.0f,   1.0f,  1.0f, 1.0f,
+         1.0f,  -1.0f,  1.0f, 0.0f,
+        -1.0f,  -1.0f,  0.0f, 0.0f
     };
 
     unsigned int quadVAO, quadVBO;
@@ -85,8 +91,10 @@ int main(void)
     Shader defaultShader("../shaders/defaultVertexShader.glsl", "../shaders/defaultFragmentShader.glsl");
     Shader screenShader("../shaders/framebufferVertex.glsl", "../shaders/framebufferFragment.glsl");
     Shader shaderSingleColor("../shaders/defaultVertexShader.glsl", "../shaders/shaderSingleColor.glsl");
+    Shader skyboxShader("../shaders/skyboxVertexShader.glsl", "../shaders/skyboxFragmentShader.glsl");
 
     Framebuffer defaultFramebuffer;
+    Skybox skybox;
 
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
@@ -121,19 +129,24 @@ int main(void)
         glStencilMask(0x00);
 
 
-        // defaultShader.use();
-        // glm::mat4 transform = glm::mat4(1.0f);
-        // transform = glm::rotate(transform, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
-
         // defaultShader.setMat4("transform", transform);
-
-        glm::mat4 model = glm::mat4(1.0f);
-        glm::mat4 view = defaultCamera.GetViewMatrix();
         glm::mat4 projection = glm::perspective(glm::radians(defaultCamera.Zoom),
-                (float)WIN_WIDTH / (float)WIN_HEIGHT, 0.1f, 100.0f);
+                             (float)WIN_WIDTH / (float)WIN_HEIGHT, 0.1f, 100.0f);
+        glm::mat4 view = glm::mat4(glm::mat3(defaultCamera.GetViewMatrix()));
+
+        glDepthMask(GL_FALSE);
+        skyboxShader.use();
+        
+        skyboxShader.setMat4("view", view);
+        skyboxShader.setMat4("projection", projection);
+
+        skybox.draw(); 
+        glDepthMask(GL_TRUE);
+
 
         // view = glm::translate(view, glm::vec3(0.0f, 0.0f, -2.0f));
-        model = glm::translate(model, glm::vec3(0.0f, -2.0f, 0.0f));
+        view = defaultCamera.GetViewMatrix();
+
 
 
         defaultShader.use();
@@ -176,18 +189,21 @@ int main(void)
 
         defaultShader.setMat4("projection", projection);
         defaultShader.setMat4("view", view);
-        defaultShader.setMat4("model", model);
-
 
         glBindTexture(GL_TEXTURE_2D, texture);
+
+
+        glm::mat4 planeModel = glm::mat4(1.0f);
+        planeModel = glm::translate(planeModel, glm::vec3(0.0f, -2.0f, 0.0f));
+        defaultShader.setMat4("model", planeModel);
+
         plane.draw();
 
 
-        model = glm::scale(model, glm::vec3(1.01f, 1.01f, 1.01f));
-        model = glm::translate(model, glm::vec3(0.0f, 2.0f, 0.0f));
+        glm::mat4 cubeModel = glm::mat4(1.0f);
+        cubeModel = glm::translate(cubeModel, glm::vec3(0.0f, 2.0f, 0.0f));
+        defaultShader.setMat4("model", cubeModel);
 
-
-        // plane.draw();
 
         glStencilFunc(GL_ALWAYS, 1, 0xFF);
         glStencilMask(0xFF);
@@ -195,18 +211,19 @@ int main(void)
 
         glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
         glStencilMask(0x00);
-        glDisable(GL_DEPTH_TEST);
+        // glDisable(GL_DEPTH_TEST);
         shaderSingleColor.use();
 
+        cubeModel = glm::scale(cubeModel, glm::vec3(1.01f, 1.01f, 1.01f));
         shaderSingleColor.setVec3("viewPos", defaultCamera.Position);
         shaderSingleColor.setMat4("projection", projection);
         shaderSingleColor.setMat4("view", view);
-        shaderSingleColor.setMat4("model", model);
+        shaderSingleColor.setMat4("model", cubeModel);
         
         cube.draw();
         glStencilMask(0xFF);
         glStencilFunc(GL_ALWAYS, 1, 0xFF);
-        glEnable(GL_DEPTH_TEST);
+        // glEnable(GL_DEPTH_TEST);
 
 
 
@@ -251,6 +268,14 @@ void processInput(GLFWwindow *window) {
 
   if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS){
     defaultCamera.ProcessKeyboard(LEFT, deltaTime);
+  }
+
+  if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS){
+    defaultCamera.ProcessKeyboard(UP, deltaTime);
+  }
+
+  if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS){
+      defaultCamera.ProcessKeyboard(DOWN, deltaTime);
   }
 }
 

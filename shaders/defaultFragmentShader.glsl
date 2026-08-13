@@ -60,9 +60,9 @@ void main(){
   vec3 viewDir = normalize(viewPos - FragPos);
   vec3 result = vec3(0.0);
 
-  // result += funcDirectLight(directLight, norm, viewDir);
+  result += funcDirectLight(directLight, norm, viewDir);
   // result += funcPointLight(pointLight, norm, FragPos, viewDir);
-  result += funcSpotLight(spotLight, norm, FragPos, viewDir);
+  // result += funcSpotLight(spotLight, norm, FragPos, viewDir);
 
   FragColor = vec4(result, 1.0);
 }

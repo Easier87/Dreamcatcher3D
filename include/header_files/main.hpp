@@ -4,6 +4,8 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 
+#include <skybox.hpp>
+
 #include <models/triangle.hpp>
 #include <models/plane.hpp>
 #include <models/cube.hpp>
