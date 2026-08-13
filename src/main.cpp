@@ -30,7 +30,7 @@ int main(void)
     glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
 
-    glEnable(GL_CULL_FACE);
+    // glEnable(GL_CULL_FACE);
     glCullFace(GL_FRONT);
     glFrontFace(GL_CCW);
 
@@ -91,7 +91,7 @@ int main(void)
     Shader defaultShader("../shaders/defaultVertexShader.glsl", "../shaders/defaultFragmentShader.glsl");
     Shader screenShader("../shaders/framebufferVertex.glsl", "../shaders/framebufferFragment.glsl");
     Shader shaderSingleColor("../shaders/defaultVertexShader.glsl", "../shaders/shaderSingleColor.glsl");
-    Shader skyboxShader("../shaders/skyboxVertexShader.glsl", "../shaders/skyboxFragmentShader.glsl");
+    Shader cubemapShader("../shaders/skyboxVertexShader.glsl", "../shaders/skyboxFragmentShader.glsl");
 
     Framebuffer defaultFramebuffer;
     Skybox skybox;
@@ -135,10 +135,10 @@ int main(void)
         glm::mat4 view = glm::mat4(glm::mat3(defaultCamera.GetViewMatrix()));
 
         glDepthMask(GL_FALSE);
-        skyboxShader.use();
+        cubemapShader.use();
         
-        skyboxShader.setMat4("view", view);
-        skyboxShader.setMat4("projection", projection);
+        cubemapShader.setMat4("view", view);
+        cubemapShader.setMat4("projection", projection);
 
         skybox.draw(); 
         glDepthMask(GL_TRUE);
@@ -155,7 +155,7 @@ int main(void)
 
 
         // direct light
-        defaultShader.setVec3("directLight.direction", -1.0f, -0.7f, -1.0f);
+        defaultShader.setVec3("directLight.direction", -1.0f, -1.0f, -1.0f);
         defaultShader.setVec3("directLight.ambient", 0.2f, 0.2f, 0.2f);
         defaultShader.setVec3("directLight.diffuse", 0.8f, 0.8f, 0.8f);
         defaultShader.setVec3("directLight.specular", 1.0f, 1.0f, 1.0f);
@@ -194,10 +194,20 @@ int main(void)
 
 
         glm::mat4 planeModel = glm::mat4(1.0f);
-        planeModel = glm::translate(planeModel, glm::vec3(0.0f, -2.0f, 0.0f));
-        defaultShader.setMat4("model", planeModel);
 
-        plane.draw();
+        // planeModel = glm::translate(planeModel, glm::vec3(0.0f, -2.0f, 0.0f));
+        // planeModel = glm::scale(planeModel, glm::vec3(5.0f, 1.0f, 5.0f));
+
+        for (unsigned int i = 0; i < 24; i++){
+            for (unsigned int j = 0; j < 24; j++) {
+                planeModel = glm::mat4((float)j);
+                planeModel = glm::translate(planeModel, glm::vec3(-24.0f + (float)i * 2, -2.0f, -24.0f + (float)j * 2));
+                defaultShader.setMat4("model", planeModel);
+                plane.draw();
+            }
+        }
+
+        // plane.draw();
 
 
         glm::mat4 cubeModel = glm::mat4(1.0f);
