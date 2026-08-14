@@ -23,6 +23,8 @@ add_executable(${PROJECT_NAME}
   src/core/texture_loader.cpp
   src/core/framebuffer.cpp
 
+  src/models/mesh.cpp
+  src/models/model.cpp
   src/models/triangle.cpp
   src/models/plane.cpp
   src/models/cube.cpp
@@ -31,14 +33,17 @@ add_executable(${PROJECT_NAME}
 add_subdirectory(thirdparty/glfw-3.4)
 add_subdirectory(thirdparty/glad)
 add_subdirectory(thirdparty/glm)
+add_subdirectory(thirdparty/assimp)
 
 target_link_libraries(${PROJECT_NAME} glfw)
 target_link_libraries(${PROJECT_NAME} glad)
 target_link_libraries(${PROJECT_NAME} glm)
+target_link_libraries(${PROJECT_NAME} assimp)
 
 target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_LIST_DIR}/thirdparty/glfw-3.4/include")
 target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_LIST_DIR}/thirdparty/glad/include")
 target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_LIST_DIR}/thirdparty/glm")
+target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_LIST_DIR}/thirdparty/assimp")
 
 target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_LIST_DIR}/include/")
 

@@ -195,19 +195,19 @@ int main(void)
 
         glm::mat4 planeModel = glm::mat4(1.0f);
 
-        // planeModel = glm::translate(planeModel, glm::vec3(0.0f, -2.0f, 0.0f));
-        // planeModel = glm::scale(planeModel, glm::vec3(5.0f, 1.0f, 5.0f));
+        planeModel = glm::translate(planeModel, glm::vec3(0.0f, -2.0f, 0.0f));
+        planeModel = glm::scale(planeModel, glm::vec3(10.0f, 1.0f, 10.0f));
 
-        for (unsigned int i = 0; i < 24; i++){
-            for (unsigned int j = 0; j < 24; j++) {
-                planeModel = glm::mat4((float)j);
-                planeModel = glm::translate(planeModel, glm::vec3(-24.0f + (float)i * 2, -2.0f, -24.0f + (float)j * 2));
-                defaultShader.setMat4("model", planeModel);
-                plane.draw();
-            }
-        }
-
-        // plane.draw();
+        // for (unsigned int i = 0; i < 24; i++){
+        //     for (unsigned int j = 0; j < 24; j++) {
+        //         planeModel = glm::mat4((float)j);
+        //         planeModel = glm::translate(planeModel, glm::vec3(-24.0f + (float)i * 2, -2.0f, -24.0f + (float)j * 2));
+        //         defaultShader.setMat4("model", planeModel);
+        //         plane.draw();
+        //     }
+        // }
+        defaultShader.setMat4("model", planeModel);
+        plane.draw();
 
 
         glm::mat4 cubeModel = glm::mat4(1.0f);
@@ -284,7 +284,7 @@ void processInput(GLFWwindow *window) {
     defaultCamera.ProcessKeyboard(UP, deltaTime);
   }
 
-  if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS){
+  if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS){
       defaultCamera.ProcessKeyboard(DOWN, deltaTime);
   }
 }
