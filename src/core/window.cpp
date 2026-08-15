@@ -28,6 +28,7 @@ bool Window::WindowInit(std::string title){
 
   }
 
+
   m_window = glfwCreateWindow(WIN_WIDTH, WIN_HEIGHT, "Dreamcatcher3D", NULL, NULL);
   if (!m_window)
   {
@@ -47,6 +48,8 @@ bool Window::WindowInit(std::string title){
     std::cout << "Failed to initialize GLAD!" << std::endl;
     return false;
   }
+
+
 
   return true;
 }

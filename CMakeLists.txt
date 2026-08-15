@@ -52,4 +52,5 @@ target_link_libraries(${PROJECT_NAME} OpenGL::GL)
 
 if(APPLE)
   target_compile_options(${PROJECT_NAME} PRIVATE -Wno-deprecated-declarations)
+  target_compile_options(assimp PRIVATE -Wno-unsafe-buffer-usage)
 endif()

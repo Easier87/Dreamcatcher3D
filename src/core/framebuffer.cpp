@@ -2,7 +2,7 @@
 
 using namespace Dreamcatcher;
 
-Framebuffer::Framebuffer() : quad{ 
+Framebuffer::Framebuffer(const Window& window) : quad{ 
                                             -1.0f, -1.0f,   0.0f, 0.0f,
                                             -1.0f,  1.0f,   0.0f, 1.0f,
                                              1.0f,  1.0f,   1.0f, 1.0f,
@@ -12,14 +12,15 @@ Framebuffer::Framebuffer() : quad{
 
 {
   glGenFramebuffers(1, &FBO);
-  glBindFramebuffer(GL_FRAMEBUFFER, FBO);
+  glBindFramebuffer(GL_FRAMEBUFFER, FBO); 
 
-
+  int fbHeight, fbWidth;
+  glfwGetFramebufferSize(window.GetHandle(), &fbWidth, &fbHeight);
 
   glGenTextures(1, &texture);
   glBindTexture(GL_TEXTURE_2D, texture);
 
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, WIN_WIDTH, WIN_HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, fbWidth, fbHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -33,7 +34,7 @@ Framebuffer::Framebuffer() : quad{
   
   glGenRenderbuffers(1, &RBO);
   glBindRenderbuffer(GL_RENDERBUFFER, RBO);
-  glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, WIN_WIDTH, WIN_HEIGHT);
+  glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, fbWidth, fbHeight);
   glBindRenderbuffer(GL_RENDERBUFFER, 0);
   glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, RBO);
 
@@ -63,6 +64,11 @@ Framebuffer::Framebuffer() : quad{
   // glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
   // glBindVertexArray(0);
 }
+
+// void Framebuffer::GetBramebufferSize(Window *window)
+// {
+//
+// }
 
 // void Framebuffer::DrawFramebuffer(){
 //   glBindVertexArray(quadVAO);

@@ -21,6 +21,8 @@ int main(void)
     Window defaultWindow;
     glfwSetCursorPosCallback(defaultWindow.GetHandle(), mouse_callback);
     glfwSetScrollCallback(defaultWindow.GetHandle(), scroll_callback);
+    Framebuffer defaultFramebuffer(defaultWindow);
+
 
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
@@ -93,7 +95,6 @@ int main(void)
     Shader shaderSingleColor("../shaders/defaultVertexShader.glsl", "../shaders/shaderSingleColor.glsl");
     Shader cubemapShader("../shaders/skyboxVertexShader.glsl", "../shaders/skyboxFragmentShader.glsl");
 
-    Framebuffer defaultFramebuffer;
     Skybox skybox;
 
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
