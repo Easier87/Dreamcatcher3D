@@ -40,7 +40,7 @@ int main(void)
     // glStencilMask(0xFF);
 
     // TEXTURE LOADING
-    stbi_set_flip_vertically_on_load(true);
+    // stbi_set_flip_vertically_on_load(true);
 
     unsigned int texture;
     glGenTextures(1, &texture);
@@ -94,6 +94,13 @@ int main(void)
     Shader screenShader("../shaders/framebufferVertex.glsl", "../shaders/framebufferFragment.glsl");
     Shader shaderSingleColor("../shaders/defaultVertexShader.glsl", "../shaders/shaderSingleColor.glsl");
     Shader cubemapShader("../shaders/skyboxVertexShader.glsl", "../shaders/skyboxFragmentShader.glsl");
+
+    char filepath[] = "../assets/Survival_BackPack_2/backpack.obj";
+    Model impModel(filepath);
+
+
+
+    std::cout << "Model loaded" << std::endl;
 
     Skybox skybox;
 
@@ -191,6 +198,11 @@ int main(void)
         defaultShader.setMat4("projection", projection);
         defaultShader.setMat4("view", view);
 
+
+        glm::mat4 obModel = glm::mat4(1.0f);
+        defaultShader.setMat4("model", obModel);
+        impModel.Draw(defaultShader);
+
         glBindTexture(GL_TEXTURE_2D, texture);
 
 
@@ -218,7 +230,7 @@ int main(void)
 
         glStencilFunc(GL_ALWAYS, 1, 0xFF);
         glStencilMask(0xFF);
-        cube.draw();
+        // cube.draw();
 
         glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
         glStencilMask(0x00);
@@ -231,11 +243,13 @@ int main(void)
         shaderSingleColor.setMat4("view", view);
         shaderSingleColor.setMat4("model", cubeModel);
         
-        cube.draw();
+        // cube.draw();
+
         glStencilMask(0xFF);
         glStencilFunc(GL_ALWAYS, 1, 0xFF);
         // glEnable(GL_DEPTH_TEST);
 
+        
 
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);

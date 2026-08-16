@@ -3,6 +3,8 @@
 #include <models/base_includer.hpp>
 #include <core/shader.hpp>
 
+#include <assimp/Importer.hpp>
+
 #include <vector>
 #include <string>
 
@@ -12,12 +14,13 @@ namespace Dreamcatcher
 struct Vertex {
   glm::vec3 Position;
   glm::vec3 Normal;
-  glm::vec3 TexCoords;
+  glm::vec2 TexCoords;
 };
 
 struct Texture {
   unsigned int id;
   std::string type;
+  std::string path;
 };
 
 

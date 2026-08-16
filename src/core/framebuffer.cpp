@@ -14,6 +14,8 @@ Framebuffer::Framebuffer(const Window& window) : quad{
   glGenFramebuffers(1, &FBO);
   glBindFramebuffer(GL_FRAMEBUFFER, FBO); 
 
+  // adaptive for Retina displays
+  // ------------------------------------------
   int fbHeight, fbWidth;
   glfwGetFramebufferSize(window.GetHandle(), &fbWidth, &fbHeight);
 
