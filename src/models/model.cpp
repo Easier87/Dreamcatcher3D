@@ -13,7 +13,8 @@ void Model::Draw(Shader &shader)
 void Model::loadModel(std::string path)
 {
   Assimp::Importer import;
-  const aiScene *scene = import.ReadFile(path, aiProcess_Triangulate | 
+  const aiScene *scene = import.ReadFile(path, aiProcess_Triangulate |
+                                         aiProcess_GenSmoothNormals |
                                          aiProcess_FlipUVs |
                                          aiProcess_PreTransformVertices |
                                          aiProcess_GlobalScale);
@@ -94,14 +95,11 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
     }
   }
 
-  if (mesh->mMaterialIndex >= 0)
-  {
-    aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
-    std::vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
-    textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-    std::vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
-    textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
-  }
+  aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
+  std::vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
+  textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
+  std::vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
+  textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
 
   return Mesh(vertices, indices, textures);
 }
@@ -110,11 +108,35 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
 std::vector<Texture> Model::loadMaterialTextures(aiMaterial *material, aiTextureType type, std::string typeName)
 {
   std::vector<Texture> textures;
+  // std::cout << "Diffuse: "
+  //           << material->GetTextureCount(aiTextureType_DIFFUSE)
+  //           << std::endl;
+  //
+  // std::cout << "BaseColor: "
+  //           << material->GetTextureCount(aiTextureType_BASE_COLOR)
+  //           << std::endl;
+  //
+  // std::cout << "Normal: "
+  //           << material->GetTextureCount(aiTextureType_NORMALS)
+  //           << std::endl;
+  //
+  // std::cout << "Specular: "
+  //           << material->GetTextureCount(aiTextureType_SPECULAR)
+  //           << std::endl;
+  //
+  // std::cout << "Metalness: "
+  //           << material->GetTextureCount(aiTextureType_METALNESS)
+  //           << std::endl;
+  //
+  // std::cout << "Roughness: "
+  //           << material->GetTextureCount(aiTextureType_DIFFUSE_ROUGHNESS)
+  //           << std::endl;
+  
   for (unsigned int i = 0; i < material->GetTextureCount(type); i++)
   {
     aiString str;
     material->GetTexture(type, i, &str);
-    bool skip = false;
+    bool skip = false; 
 
     for (unsigned int j = 0; j < textures_loaded.size(); j++)
     {
@@ -129,6 +151,7 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial *material, aiTexture
     if(!skip)
     {
       Texture texture;
+
       texture.id = TextureFromFile(str.C_Str(), directory);
       texture.type = typeName;
       texture.path = str.C_Str();
@@ -136,7 +159,7 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial *material, aiTexture
       textures_loaded.push_back(texture);
     }
   }
-  
+ 
   return textures;
 }
 
@@ -145,6 +168,7 @@ unsigned int Model::TextureFromFile(const char *path, const std::string &directo
 {
   std::string filename = (std::string)path;
   filename = directory + '/' + filename;
+  std::cout << filename << std::endl;
 
   unsigned int textureID;
   glGenTextures(1, &textureID);
@@ -178,7 +202,6 @@ unsigned int Model::TextureFromFile(const char *path, const std::string &directo
     std::cout << "Texture failed to load at path: " << path << std::endl;
     stbi_image_free(data);
   }
-
 
   return textureID;
 }

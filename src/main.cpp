@@ -12,6 +12,7 @@ float lastFrame = 0.0f;
 int frameCount = 0;
 float fpsTimer = 0;
 
+
 void processInput(GLFWwindow* window);
 void mouse_callback(GLFWwindow *window, double xpos, double ypos);
 void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
@@ -95,7 +96,7 @@ int main(void)
     Shader shaderSingleColor("../shaders/defaultVertexShader.glsl", "../shaders/shaderSingleColor.glsl");
     Shader cubemapShader("../shaders/skyboxVertexShader.glsl", "../shaders/skyboxFragmentShader.glsl");
 
-    char filepath[] = "../assets/Survival_BackPack_2/backpack.obj";
+    char filepath[] = "../assets/cars_lightning_league_-_mcqueen_animations/scene.gltf";
     Model impModel(filepath);
 
 
@@ -166,7 +167,7 @@ int main(void)
         defaultShader.setVec3("directLight.direction", -1.0f, -1.0f, -1.0f);
         defaultShader.setVec3("directLight.ambient", 0.2f, 0.2f, 0.2f);
         defaultShader.setVec3("directLight.diffuse", 0.8f, 0.8f, 0.8f);
-        defaultShader.setVec3("directLight.specular", 1.0f, 1.0f, 1.0f);
+        defaultShader.setVec3("directLight.specular", 2.0f, 2.0f, 2.0f);
 
 
 
@@ -200,6 +201,7 @@ int main(void)
 
 
         glm::mat4 obModel = glm::mat4(1.0f);
+        // obModel = glm::rotate(obModel, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
         defaultShader.setMat4("model", obModel);
         impModel.Draw(defaultShader);
 

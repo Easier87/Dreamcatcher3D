@@ -83,8 +83,8 @@ vec3 funcDirectLight(DirectLight light, vec3 normal, vec3 viewDir)
   vec3 diffuse = light.diffuse * diff * vec3(texture(texture_diffuse, TexCoords));
   vec3 specular = light.specular * spec * texture(texture_specular, TexCoords).rgb;
 
-  // return (ambient + diffuse + specular);
-  return (ambient + diffuse);
+  return (ambient + diffuse + specular);
+  // return (ambient + diffuse);
 }
 
 // Point Light Function
