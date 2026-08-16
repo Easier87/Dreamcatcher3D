@@ -96,7 +96,7 @@ int main(void)
     Shader shaderSingleColor("../shaders/defaultVertexShader.glsl", "../shaders/shaderSingleColor.glsl");
     Shader cubemapShader("../shaders/skyboxVertexShader.glsl", "../shaders/skyboxFragmentShader.glsl");
 
-    char filepath[] = "../assets/cars_lightning_league_-_mcqueen_animations/scene.gltf";
+    char filepath[] = "../assets/mint_-_neverness_to_everness/scene.gltf";
     Model impModel(filepath);
 
 
