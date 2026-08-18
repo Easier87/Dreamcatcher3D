@@ -1,0 +1,11 @@
+Model Information:
+* title:	[FPS MAP] Ghost city
+* source:	https://sketchfab.com/3d-models/fps-map-ghost-city-22cc8a89046a42b4b22438b9f7207176
+* author:	Rzyas (https://sketchfab.com/rzyas)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "[FPS MAP] Ghost city" (https://sketchfab.com/3d-models/fps-map-ghost-city-22cc8a89046a42b4b22438b9f7207176) by Rzyas (https://sketchfab.com/rzyas) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

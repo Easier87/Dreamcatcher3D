@@ -1,5 +1,4 @@
 #include <models/plane.hpp>
-#include <vector>
 
 using namespace Dreamcatcher;
 

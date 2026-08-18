@@ -28,6 +28,7 @@ int main(void)
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
     glEnable(GL_BLEND);
+    glEnable(GL_FRAMEBUFFER_SRGB);
 
     glEnable(GL_STENCIL_TEST);
     glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
@@ -48,7 +49,7 @@ int main(void)
     glBindTexture(GL_TEXTURE_2D, texture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     
     float quadVertices[] = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates.
@@ -74,7 +75,7 @@ int main(void)
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 
     int width, height, nrChannels;
-    unsigned char *data = stbi_load("../assets/broken_brick_wall_1k/textures/broken_brick_wall_diff_1k.jpg", &width, &height, &nrChannels, 0);
+    unsigned char *data = stbi_load("../assets/wooden_floor_01_2k.gltf/textures/wooden_floor_01_diff_2k.jpg", &width, &height, &nrChannels, 0);
     
     if(data){
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
@@ -96,7 +97,7 @@ int main(void)
     Shader shaderSingleColor("../shaders/defaultVertexShader.glsl", "../shaders/shaderSingleColor.glsl");
     Shader cubemapShader("../shaders/skyboxVertexShader.glsl", "../shaders/skyboxFragmentShader.glsl");
 
-    char filepath[] = "../assets/cars_lightning_league_-_mcqueen_animations/scene.gltf";
+    char filepath[] = "../assets/church_of_st_peter_stourton/scene.gltf";
     Model impModel(filepath);
 
 
@@ -167,7 +168,7 @@ int main(void)
         defaultShader.setVec3("directLight.direction", -1.0f, -1.0f, -1.0f);
         defaultShader.setVec3("directLight.ambient",    0.2f,  0.2f,  0.2f);
         defaultShader.setVec3("directLight.diffuse",    0.8f,  0.8f,  0.8f);
-        defaultShader.setVec3("directLight.specular",   2.0f,  2.0f,  2.0f);
+        defaultShader.setVec3("directLight.specular",   1.0f,  1.0f,  1.0f);
 
 
 
@@ -189,8 +190,8 @@ int main(void)
         defaultShader.setFloat("spotLight.outerCutOff", glm::cos(glm::radians(18.5f)));
 
         defaultShader.setFloat("spotLight.constant",  1.0f);
-        defaultShader.setFloat("spotLight.linear",    0.09f);
-        defaultShader.setFloat("spotLight.quadratic", 0.045f);
+        defaultShader.setFloat("spotLight.linear",    0.045f);
+        defaultShader.setFloat("spotLight.quadratic", 0.0075f);
 
         defaultShader.setVec3 ("spotLight.ambient",   0.1f, 0.1f, 0.1f);
         defaultShader.setVec3 ("spotLight.diffuse",   0.8f, 0.8f, 0.8f);
@@ -201,7 +202,9 @@ int main(void)
 
 
         glm::mat4 obModel = glm::mat4(1.0f);
+        // obModel = glm::scale(obModel, glm::vec3(10.0f, 10.0f, 10.0f));
         // obModel = glm::rotate(obModel, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+        obModel = glm::translate(obModel, glm::vec3(-2.0f, -4.0f, -2.0f));
         defaultShader.setMat4("model", obModel);
         impModel.Draw(defaultShader);
 
@@ -222,7 +225,7 @@ int main(void)
         //     }
         // }
         defaultShader.setMat4("model", planeModel);
-        plane.draw();
+        // plane.draw();
 
 
         glm::mat4 cubeModel = glm::mat4(1.0f);
